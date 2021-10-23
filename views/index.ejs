@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!-- This was made by duganla#0001, please don't steal others works. -->
+<html>
+<head>
+    <%- include('partials/head') %>
+    <title>CAD</title>
+</head>
+<body>
+    <div id="app" v-if="!disabled">
+        <nav>
+            <div>
+                
+            </div>
+            <div>
+                <button v-bind:class="{ active: tab=='home' }" @click="tab='home'">Home</button>
+                <button v-bind:class="{ active: tab=='profile' }" @click="tab='profile'">Profile</button>
+                <button v-bind:class="{ active: tab=='players' }" @click="tab='players'">Players</button>
+                <button v-bind:class="{ active: tab=='mdt' }" @click="tab='mdt'">MDT</button>
+                <button v-bind:class="{ active: tab=='dmv' }" @click="tab='dmv'">DMV</button>
+            </div>
+            <div>
+                <small v-if="ms" v-text="ms"></small>
+                <small v-if="online" v-text="online.length + ' Online'"></small>
+            </div>
+        </nav>
+        <div class="tabs">
+            <div v-if="tab=='home'">
+                <h2>Welcome <%- user.username %></h2>
+            </div>
+            <div v-if="tab=='profile'">
+                <table style="text-align: center; margin: auto;">
+                    <tr>
+                        <td>Id</td>
+                        <td><%- user.id %></td>
+                    </tr>
+                    <tr>
+                        <td>Username</td>
+                        <td><%- user.username %></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td><%- user.email %></td>
+                    </tr>
+                </table>
+            </div>
+            <div v-if="tab=='players'">
+                <h3>Your players</h3>
+                <div>
+                    <table v-if="players" class="player-list">
+                        <tr v-for="player in players">
+                            <td>
+                                <input type="text" v-model="player.nameFirst" placeholder="First Name">
+                                <input type="text" v-model="player.nameLast" placeholder="Last Name">
+                                <input type="text" v-model="player.address" placeholder="Address">
+                                <input type="date" v-model="player.dob" placeholder="DOB">
+                            </td>
+                            <td>
+                                <select v-model="player.eye">
+                                    <option>Brown</option>
+                                    <option>Blue</option>
+                                    <option>Hazel</option>
+                                    <option>Amber</option>
+                                    <option>Gray</option>
+                                    <option>Green</option>
+                                </select>
+                                <select v-model="player.hair">
+                                    <option>Black</option>
+                                    <option>Brown</option>
+                                    <option>Blond</option>
+                                    <option>Gray</option>
+                                    <option>Red</option>
+                                    <option>Unnatural</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select v-model="player.height">
+                                    <option>4'0</option><option>4'1</option><option>4'2</option><option>4'3</option><option>4'4</option><option>4'5</option><option>4'6</option><option>4'7</option><option>4'8</option><option>4'9</option><option>4'10</option><option>4'11</option><option>5'0</option><option>5'1</option><option>5'2</option><option>5'3</option><option>5'4</option><option>5'5</option><option>5'6</option><option>5'7</option><option>5'8</option><option>5'9</option><option>5'10</option><option>5'11</option><option>6'0</option><option>6'1</option><option>6'2</option><option>6'3</option><option>6'4</option><option>6'5</option><option>6'6</option><option>6'7</option><option>6'8</option><option>6'9</option><option>6'10</option><option>6'11</option><option>7'0</option>
+                                </select>
+                                <label class="input-unit">
+                                    <input type="number" min="10" max="650" v-model="player.weight">
+                                    <span>lbs</span>
+                                </label>
+                            </td>
+                            <td>
+                                <select v-model="player.sex">
+                                    <option>M</option>
+                                    <option>F</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button @click="savePlayer(player)">Save</button>
+                            </td>
+                        </tr>
+                    </table>    
+                </div>
+                <button @click="players.push({eye:'Blue', hair:'Black', height:'5\'8', sex:'M', weight: 130})">New Player</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    let currentWebSocket = null;
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            alert: '',
+            ms: 0,
+            roster: [],
+            tab: 'home',
+            username: '',
+            players: [],
+            online: [],
+            disabled: false,
+        },
+        methods: {
+            savePlayer: function(player) {
+                console.log("Starting save of player", player)
+                if (player.nameFirst && player.nameLast && player.address && player.dob && player.eye && player.hair && player.height && player.weight && player.sex) {
+                    fetch("/api/players", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(player)
+                    }).then(res => {
+                        if (!res.ok) { res.text().then(alert) }
+                    })
+                } else {
+                    alert("Can't save, your missing a value")
+                }
+            }
+        },
+    })
+
+    fetch("/api/players").then(res => {
+        if (!res.ok) { res.text().then(alert) }
+        return res.json()
+    }).then(players => {
+        app.players = players
+    })
+
+
+    // \/ TESTING ONLY \/
+    let hostname = window.location.host;
+    if (hostname == "") {
+        hostname = "cad.galleu.workers.dev";
+    };
+    // /\ TESTING ONLY /\
+
+
+    let lastSeenTimestamp = 0;
+    let wroteWelcomeMessages = false;
+
+    connect()
+    function connect() {
+        let ws = new WebSocket("ws://" + hostname + "/api/gateway");
+        let rejoined = false;
+        let startTime = Date.now();
+
+        let rejoin = async () => {
+            if (!rejoined) {
+                rejoined = true;
+                currentWebSocket = null;
+
+                while (app.roster.firstChild) {
+                    app.roster.removeChild(app.roster.firstChild);
+                }
+
+                // Don't try to reconnect too rapidly.
+                let timeSinceLastJoin = Date.now() - startTime;
+                if (timeSinceLastJoin < 10000) {
+                    // Less than 10 seconds elapsed since last join. Pause a bit.
+                    await new Promise(resolve => setTimeout(resolve, 10000 - timeSinceLastJoin));
+                }
+
+                // OK, reconnect now!
+                connect();
+            }
+        }
+
+        ws.addEventListener("open", event => {
+            currentWebSocket = ws;
+            ws.send(JSON.stringify({ method: "ping", time: Date.now() }));
+            ws.send(JSON.stringify({ method: "get", status: "online" }));
+        });
+
+
+        ws.addEventListener("message", event => {
+            let data = JSON.parse(event.data);
+            console.debug(data)
+
+            if (data.method == "error") {
+                console.error(data);
+                if (data.display) app.alert = data.message;
+            } else if (data.method == "add") {
+
+                
+            } else if (data.method == 'remove') {
+
+
+
+
+            } else if (data.method == "update") {
+                if (data.status == "online") {
+                    if (app.online.find(x => x.id == data.user.id)) {
+                        // Already online.
+                        return;
+                    } else {
+                        app.online.push(data.user);
+                    }
+                } else if (data.status == "offline") {
+                    let index = app.online.findIndex(x => x.id == data.user.id);
+                    if (index != -1) {
+                        app.online.splice(index, 1);
+                    }
+                }
+
+
+            } else if (data.method == "ping") {
+                app.ms = Date.now() - data.time + " ms";
+                console.log("App connection ping is", app.ms)
+            } else {
+                console.error("Unknown WS Method", data.method)
+            }
+        });
+
+        ws.addEventListener("close", event => {
+            if (event.code == 1006) {
+                // "Abnormal closure"
+                console.log("WebSocket closed, Abnormal, Reconnecting:", event.code, event.reason);
+                rejoin();
+            } else if (event.code === 4001) {
+                app.disabled = true;
+                alert("You have been disconnected from the server. " + event.reason);
+            }
+        });
+        ws.addEventListener("error", event => {
+            console.log("WebSocket error, reconnecting:", event);
+            rejoin();
+        });
+    }
+
+
+
+    function pingLoop() {
+        if (currentWebSocket) {
+            currentWebSocket.send(JSON.stringify({ method: "ping", time: Date.now() }))
+        }
+
+        setTimeout(pingLoop, 1000);
+    }
+    pingLoop();
+</script>
+<!--===================================================================================-->
+
+</html>

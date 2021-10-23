@@ -1,0 +1,109 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.arcsky.net/js/vue-2-dev.js"></script>
+<style type="text/css">
+:root {
+    --background: #17191a;
+    --text: #fff;
+    --obj: #454647;
+}
+
+html, body {
+    background: url("https://cdn.digitaltek.net/imagedoc-darknoise.png");
+    background-color: var(--background);
+    color: var(--text);
+    margin: 0;
+    font-family: Verdana, Helvetica, sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 10px;
+}
+
+nav button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    outline: none;
+    color: var(--text);
+    padding: 4px 15px; 
+}
+nav button:hover {
+    opacity: 60%;
+    border-bottom: 2px solid #fff;
+}
+nav .active {
+    border-bottom: 2px solid #fff;
+}
+
+.tabs {
+    text-align: center;
+}
+
+
+
+.player-list tbody {
+	text-align: center;
+	display: block;
+	max-width: 800px;
+	margin: auto;
+}
+
+
+.player-list  {
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.player-list tr {
+    display: block;
+    border-radius: 10px;
+    background-color: var(--background);
+    text-align: center;
+    margin: 0 auto;
+    margin: 10px;
+    padding: 15px;
+}
+
+.player-list td {
+    display: block;
+}
+
+.player-list input, .player-list select {
+    all: unset;
+    text-align: left;
+    font-size: 0.8rem;
+    background: var(--obj);
+    border-radius: 4px;
+    color: #fff;
+    width: 150px;
+    height: 30px;
+    padding: 0 10px;
+    margin: 5px;
+    border: none;
+    outline: none;
+}
+
+select:hover {
+    cursor: pointer;
+}
+
+label.input-unit {
+  position: relative;
+}
+
+label.input-unit span {
+  position: absolute;
+  top: 0;
+  right: 40px;
+}
+
+
+</style>

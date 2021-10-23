@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+        <title>CAD ADMIN PAGE</title>
+</head>
+
+<body>
+    <div id="app">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Display</th>
+                <th>Member</th>
+                <th>Flags</th>
+                <th>Edit</th>
+            </tr>
+            <tr v-for="user in users">
+                <td>{{user.discord.id}}</td>
+                <td>{{user.discord.username}}</td>
+                <td>{{user.member.username}}</td>
+                <td>{{user.flags}}</td>
+                <td><button>Edit</button></td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                users: <%- JSON.stringify(users) %>
+            }
+        })
+    </script>
+</body>
+
+</html>

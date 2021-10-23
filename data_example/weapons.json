@@ -1,0 +1,14 @@
+[
+    {
+        "id": "d9c5de1c-361a-4b8d-9e2a-da2faf9b429a",
+        "serial": "123456",
+        "flags": "Testing",
+        "type": "Gun",
+        "name": "Tester",
+        "metadata": {
+            "deleted": false,
+            "created": 1635003485535,
+            "updated": 1635003485535
+        }
+    }
+]

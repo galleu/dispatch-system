@@ -1,0 +1,12 @@
+{
+    "discord_endpoint": "https://discord.com/api/v8",
+    "redirectURL": "http://localhost:8080/auth",
+    "guild_id": "123456789101112134",
+    "client_id": "123456789101112134",
+    "client_secret": "discord_client_secret",
+    "client_auth": "Bot BOT_TOKEN",
+    "loggingChannel": "123456789101112134",
+    "tebi": "TB-PLAIN KEY:VALUE",
+    "logging": false,
+    "port": 8080 
+}

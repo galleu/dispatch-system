@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiting Room</title>
+    <style>
+        body {
+            background-color: #17191a;
+            color: #fff;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <% if (status) { %>        
+            <h2>Status: <%- status %></h2>
+
+        <% } %>
+        <% if (username) { %>        
+            <p>Hello <%- username %></p>
+        <% } %>
+        <p><%- message %> </p>
+    </center>
+</body>
+</html>
