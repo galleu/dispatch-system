@@ -284,8 +284,7 @@ app.get('/api/players', async (req, res) => {
     } else {
         if ((req.user.flags & 2) == 2) {
             const players = await db.players.getAll();
-            players.filter((player) => player.owner === req.user.id);
-            res.status(200).send(players); return;
+            res.status(200).json(players.filter((player) => player.owner === req.user.id)); return;
         } else {
             res.status(401).send("Missing Permissions"); return;
         };
@@ -317,22 +316,38 @@ app.get('/api/players/:id', async (req, res) => {
 app.post('/api/players', async (req, res) => {
     if (req.session) {
         if ((req.user.flags & 32) == 32) {
-            const player = {
-                nameFirst: req.body.nameFirst,
-                nameLast: req.body.nameLast,
-                address: req.body.address,
-                dob: req.body.dob,
-                eye: req.body.eye,
-                hair: req.body.hair,
-                height: req.body.height,
-                weight: req.body.weight,
-                sex: req.body.sex,
-                picture: req.body.picture || "",
-                wanted: false,
-                owner: req.user.id,
-            };
-            const id = db.players.create(player);
-            res.status(200).send(id);
+            if (req.body.id) {
+                // For updating an existing player
+                let player = db.players.get(req.body.id);
+                if (!player) {
+                    res.status(404).send("ID provided but player not found"); return;
+                } else {
+                    delete req.body.metadata
+                    delete req.body.register
+                    delete req.body.license
+                    player = Object.assign(player, req.body);
+                    player.metadata.updated = Date.now();
+                    db.players.set(player.id, player);
+                    return res.status(200).send("Player updated");
+                }
+            } else {
+                const player = {
+                    nameFirst: req.body.nameFirst,
+                    nameLast: req.body.nameLast,
+                    address: req.body.address,
+                    dob: req.body.dob,
+                    eye: req.body.eye,
+                    hair: req.body.hair,
+                    height: req.body.height,
+                    weight: req.body.weight,
+                    sex: req.body.sex,
+                    picture: req.body.picture || "",
+                    wanted: false,
+                    owner: req.user.id,
+                };
+                const id = db.players.create(player);
+                res.status(200).send(id);
+            }
         }
     } else {
         next(401); return;
