@@ -1,0 +1,27 @@
+{
+  "name": "cad",
+  "version": "1.0.0",
+  "description": "This CAD (Computer-Aided Dispatch System) is a open source system for anyone to use. This is for a game only, and should never be used for any other purpose. This integrates with discord, and is designed to be used with console/non PC integrated games.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "galleu",
+  "license": "MIT",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-ws": "^5.0.2",
+    "node-fetch": "^2.6.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galleu/dispatch-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/galleu/dispatch-system/issues"
+  },
+  "homepage": "https://github.com/galleu/dispatch-system#readme"
+}
