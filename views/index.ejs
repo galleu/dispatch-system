@@ -25,9 +25,11 @@
         </nav>
         <div class="tabs">
             <div v-if="tab=='home'">
+                <!-- Home Tab -->
                 <h2>Welcome <%- user.username %></h2>
             </div>
             <div v-if="tab=='profile'">
+                <!-- Profile Tab -->
                 <table style="text-align: center; margin: auto;">
                     <tr>
                         <td>Id</td>
@@ -44,6 +46,7 @@
                 </table>
             </div>
             <div v-if="tab=='players'">
+                <!-- Players Tab -->
                 <h3>Your players</h3>
                 <div>
                     <table v-if="players" class="player-list">
@@ -95,6 +98,39 @@
                 </div>
                 <button @click="players.push({eye:'Blue', hair:'Black', height:'5\'8', sex:'M', weight: 130})">New Player</button>
             </div>
+            <div v-if="tab=='mdt'">
+                <!-- MTD tab -->
+                <div>
+                    <div>
+                        <h3>Online</h3>
+                        <table class="dispatch-table">
+                            <thead>
+                                <tr>
+                                    <th>Call Sign</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Subdivision</th>
+                                    <th>Status</th>
+                                    <th>Active Call</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="user in dispatch.users">
+                                    <td v-text="user.callsign"></td>
+                                    <td v-text="user.name"></td>
+                                    <td v-text="user.department"></td>
+                                    <td v-text="user.subdivision"></td>
+                                    <td v-text="user.status"></td>
+                                    <td v-text="user.activeCall"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -112,6 +148,7 @@
             players: [],
             online: [],
             disabled: false,
+            dispatch: {users: [{ name: 'Tester', callsign: 'Cool-f5', department: 'LEO', subdivision: 'SHPD', status: 'Avalable', activeCall: null },{ name: 'Tester', callsign: 'Cool-f5', department: 'LEO', subdivision: 'SHPD', status: 'Avalable', activeCall: null }]},
         },
         methods: {
             savePlayer: function(player) {
