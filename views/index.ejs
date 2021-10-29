@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- This was made by duganla#0001, please don't steal others works. -->
+<!-- This project is open source (MIT), if you want to contribute: https://github.com/galleu/dispatch-system -->
 <html>
 <head>
     <%- include('partials/head') %>
@@ -164,6 +164,10 @@
                 } else {
                     alert("Can't save, your missing a value")
                 }
+            },
+            mdtOnline: function(isVisible, entry) {
+                
+                console.log(isVisible, entry)
             }
         },
     })
